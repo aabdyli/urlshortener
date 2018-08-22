@@ -34,10 +34,13 @@ app.post('/api/shorturl/new', (req, res, next) => {
   
   const url = req.body.url
   
-  dns.lookup(url, console.log)
+  dns.lookup(url.slice(url.indexOf('.') + 1), (err, data) => {
+    if(err) json = {err: "invalid URL"}
+    console.log()
+  })
   next()
-} ,(req, res) => {
-  console.log(req.body)
+}, (req, res) => {
+  res.json(json)
 })
 
 app.get("/api/hello", function (req, res) {
