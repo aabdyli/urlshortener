@@ -32,9 +32,12 @@ app.get('/', function(req, res){
 app.post('/api/shorturl/new', (req, res, next) => {
   let json
   
-  const url = req.
-} ,(req, res) => {
+  const url = req.body.url
   
+  dns.lookup(url, console.log)
+  next()
+} ,(req, res) => {
+  console.log(req.body)
 })
 
 app.get("/api/hello", function (req, res) {
