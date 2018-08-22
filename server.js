@@ -27,10 +27,10 @@ app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
+let json;
+
+app.use('api/shorturl/new', (req, res, next) => {
   
-// your first API endpoint... 
-app.post('/api/shorturl/new', (req, res, next) => {
-  let json
   
   const url = req.body.url
   
@@ -39,9 +39,12 @@ app.post('/api/shorturl/new', (req, res, next) => {
     console.log()
   })
   next()
-}, (req, res) => {
-  res.json(json)
 })
+  
+// your first API endpoint... 
+app.post('/api/shorturl/new', (req, res) => {
+  res.json(json)
+});
 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
