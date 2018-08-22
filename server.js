@@ -29,20 +29,20 @@ app.get('/', function(req, res){
 
 let json;
 
-app.use('api/shorturl/new', (req, res, next) => {
+app.use('api/shorturl/new', )
+  
+// your first API endpoint... 
+app.post('/api/shorturl/new', (req, res, next) => {
   
   
   const url = req.body.url
   
   dns.lookup(url.slice(url.indexOf('.') + 1), (err, data) => {
-    if(err) json = {err: "invalid URL"}
+    if(err) return res.json({err: "invalid URL"})
     console.log()
   })
   next()
-})
-  
-// your first API endpoint... 
-app.post('/api/shorturl/new', (req, res) => {
+}, (req, res) => {
   res.json(json)
 });
 
