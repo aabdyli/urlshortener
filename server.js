@@ -28,8 +28,12 @@ app.get('/', function(req, res){
 });
 
 // your first API endpoint... 
-app.post('/api/shorturl/new', function (req, res) {
+app.post('/api/shorturl/new', function (req, res, next) {
+  const url = req.body.url
   
+  next()  
+}, function (req, res) {
+
 });
 
 app.get("/api/hello", function (req, res) {
