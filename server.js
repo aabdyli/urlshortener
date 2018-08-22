@@ -30,7 +30,7 @@ app.get('/', function(req, res){
 // your first API endpoint... 
 app.post('/api/shorturl/new', function (req, res, next) {
   const url = req.body.url
-  
+  const urlRegex = //
   next()  
 }, function (req, res) {
 
