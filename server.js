@@ -27,23 +27,9 @@ app.get('/', function(req, res){
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-let json;
-
-app.use('api/shorturl/new', )
-  
 // your first API endpoint... 
-app.post('/api/shorturl/new', (req, res, next) => {
+app.post('/api/shorturl/new', function (req, res) {
   
-  
-  const url = req.body.url
-  
-  dns.lookup(url.slice(url.indexOf('.') + 1), (err, data) => {
-    if(err) return res.json({err: "invalid URL"})
-    console.log()
-  })
-  next()
-}, (req, res) => {
-  res.json(json)
 });
 
 app.get("/api/hello", function (req, res) {
