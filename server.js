@@ -6,14 +6,16 @@ const mongoose = require('mongoose');
 const dns = require('dns')
 const cors = require('cors');
 const bodyParser = require('body-parser')
-
+const autoIncrement = require('mongoose-auto-increment');
 const app = express();
 
 // Basic Configuration 
 const port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
-mongoose.connect(process.env.MONGOLAB_URI);
+const connection = mongoose.createConnection(process.env.MONGOLAB_URI);
+autoIncrement.initialize(connection);
+
 var timeout = 10000;
 const Schema = mongoose.Schema
 
@@ -21,7 +23,9 @@ const URLSchema = new Schema({
   url: { type: String, required: true}
 })
 
-const URLdata = mongoose.model('URL', URLSchema)
+URLSchema.plugin(autoIncrement.plugin, {model: 'URL', field: 'short_url' });
+
+const URLdata = connection.model('URL', URLSchema)
 
 function createAndSaveURL(done) {
   const urlData = new URLdata();
