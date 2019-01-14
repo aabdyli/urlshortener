@@ -58,7 +58,8 @@ app.post('/api/shorturl/new', function (req, res, next) {
   }
 }, function (req, res, next) {
   const uri = new URLdata(req.body)
-  res.json(uri);
+  uri.save();
+  res.json({ 'original_url': uri.url, 'short_url': uri._id });
   // var t = setTimeout(() => { next({message: 'timeout'}) }, timeout);
   // createAndSaveURL((err, data) => {
   //   clearTimeout(t);
