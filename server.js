@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
 mongoose.connect(process.env.MONGOLAB_URI);
-
+var timeout = 10000;
 const Schema = mongoose.Schema
 
 const URLSchema = new Schema({
@@ -52,19 +52,23 @@ app.post('/api/shorturl/new', function (req, res, next) {
   } else {
     res.json({"error": "invalid URL"})
   }
-}, function (req, res) {
-  createAndSaveURL((err,data) => {
-    if(err) { return err; }
-    if(!data) {
-      console.log('Missing `done()` argument');
-      return {message: 'Missing callback argument'};
-    }
-    URL.findById(data['_id'], (err, uri) => {
-      if(err) {return err;}
-      res.json(uri);
-      uri.remove();
-    })
-  })
+}, function (req, res, next) {
+  const uri = new URLdata(req.body)
+  res.json(uri);
+  // var t = setTimeout(() => { next({message: 'timeout'}) }, timeout);
+  // createAndSaveURL((err, data) => {
+  //   clearTimeout(t);
+  //   if(err) { return (next(err)); }
+  //   if(!data) {
+  //     console.log('Missing `done()` argument');
+  //     return next({message: 'Missing callback argument'});
+  //   }
+  //    URLdata.findById(data._id, function(err, pers) {
+  //      if(err) { return (next(err)); }
+  //      res.json(pers);
+  //      pers.remove();
+  //    });
+  // })
 });
 
 app.get("/api/hello", function (req, res) {
