@@ -15,10 +15,16 @@ const port = process.env.PORT || 3000;
 /** this project needs a db !! **/ 
 mongoose.connect(process.env.MONGOLAB_URI);
 
-const Schema = moongose.Schema
+const Schema = mongoose.Schema
 
-const URLdataSchema = new Schema({
-  url: {
+const URLSchema = new Schema({
+  url: { type: String, required: true}
+})
+
+const URL = mongoose.model('URL', URLSchema)
+
+function createAndSaveURL(done) {
+  
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
