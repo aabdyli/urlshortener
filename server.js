@@ -21,10 +21,15 @@ const URLSchema = new Schema({
   url: { type: String, required: true}
 })
 
-const URL = mongoose.model('URL', URLSchema)
+const URLdata = mongoose.model('URL', URLSchema)
 
 function createAndSaveURL(done) {
-  
+  const urlData = new URLdata();
+  urlData.save((err,data) => {
+    if (err) console.log(err)
+      done(null , data);
+  })
+}
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -48,8 +53,18 @@ app.post('/api/shorturl/new', function (req, res, next) {
     res.json({"error": "invalid URL"})
   }
 }, function (req, res) {
-  console.log(req)
-  res.send("valid")
+  createAndSaveURL((err,data) => {
+    if(err) { return err; }
+    if(!data) {
+      console.log('Missing `done()` argument');
+      return {message: 'Missing callback argument'};
+    }
+    URL.findById(data['_id'], (err, uri) => {
+      if(err) {return err;}
+      res.json(uri);
+      uri.remove();
+    })
+  })
 });
 
 app.get("/api/hello", function (req, res) {
