@@ -31,10 +31,14 @@ app.get('/', function(req, res){
 app.post('/api/shorturl/new', function (req, res, next) {
   const url = req.body.url
   const urlRegex = /(https:\/\/www\.|https:\/\/|http:\/\/www\.|http:\/\/)([a-z0-9]{1,20}\.)?([a-z0-9-]{2,64}\.[a-z0-9]{2,25})(\/.*)?/
-  next()  
+  if(urlRegex.test(url)) {
+    next()
+  } else {
+    res.json({"error": "invalid URL"})
+  }
 }, function (req, res) {
   console.log(req)
-  res.send(JSON.parse(req))
+  res.send("valid")
 });
 
 app.get("/api/hello", function (req, res) {
