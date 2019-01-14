@@ -13,7 +13,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 /** this project needs a db !! **/ 
-// mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGOLAB_URI);
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
