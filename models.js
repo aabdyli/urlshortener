@@ -1,6 +1,7 @@
+const mongo = require('mongodb');
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_URI);
+connection = mongoose.createConnection(process.env.MONGOLAB_URI);
 
 const CounterSchema = new mongoose.Schema({
   seq: { type: Number, default: 0}
@@ -34,4 +35,4 @@ UrlSchema.pre('save', function(next) {
 
 const UrlData = mongoose.model('url', UrlSchema);
 
-export.UrlData = UrlData;
+exports.UrlData = UrlData;
