@@ -1,7 +1,7 @@
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
 
-connection = mongoose.createConnection(process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGOLAB_URI);
 
 const CounterSchema = new mongoose.Schema({
   seq: { type: Number, default: 0}
@@ -26,7 +26,7 @@ UrlSchema.pre('save', function(next) {
       next()
     })
     .catch(function(error) {
-      throw error;
+      next(error);
     }))
   } else {
     next()
