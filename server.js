@@ -65,7 +65,7 @@ app.get('/', function(req, res){
 // your first API endpoint... 
 app.post('/api/shorturl/new', function (req, res, next) {
   const url = req.body.url
-  const urlRegex = /(https:\/\/www\.|https:\/\/|http:\/\/www\.|http:\/\/)([a-z0-9]{1,20}\.)?([a-z0-9-]{2,64}\.[a-z0-9]{2,25})(\/.*)?/
+  const urlRegex = /(https:\/\/www\.|https:\/\/|http:\/\/www\.|http:\/\/)([a-z0-9-]{1,20}\.)?([a-z0-9-]{2,64}\.[a-z0-9]{2,25})(\/.*)?/
   if(urlRegex.test(url)) {
     dns.lookup(url.replace(/(^\w+:|^)\/\//, ''), function (err) {
       if(err) {
@@ -89,7 +89,12 @@ app.post('/api/shorturl/new', function (req, res, next) {
 });
 
 app.get("/api/shorturl/:uri", function (req,res) {
-  const uri = req.para
+  const short = req.params.uri;
+  Url.findOne({short_url: short})
+  .exec(function(err, data) {
+    if(err) res.json({error: "url does not exist"})
+    res.redirect(data.original_url)
+  })
 });
 
 app.get("/api/hello", function (req, res) {
