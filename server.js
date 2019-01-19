@@ -21,8 +21,23 @@ const UrlSchema = new mongoose.Schema({
 
 const Url = mongoose.model('Url', UrlSchema);
 
-function urlCreate(req, res) {
-  Url.findById( 
+function urlCreate(data, callback) {
+  const url = data.url;
+  Url.findOne({original_url: url})
+    .exec(function (err, foundUrl) {
+      if(err) {
+        const short_url = Math.random().toString(36).substring(7);
+        const uri = new Url({
+          original_url: url, 
+          short_url: short_url
+        })
+        
+        uri.save()
+          .then(
+      } else {
+        callback(null, data)
+      }
+    })
 }
 
 // Basic Configuration 
