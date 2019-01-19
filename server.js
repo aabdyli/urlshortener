@@ -25,7 +25,7 @@ function urlCreate(data, callback) {
   const url = data.url;
   Url.findOne({original_url: url})
     .exec(function (err, foundUrl) {
-      if(err) {
+      if(foundUrl == null) {
         const short_url = Math.random().toString(36).substring(7);
         const uri = new Url({
           original_url: url, 
@@ -66,14 +66,9 @@ app.get('/', function(req, res){
 app.post('/api/shorturl/new', function (req, res, next) {
   const url = req.body.url
   const urlRegex = /(https:\/\/www\.|https:\/\/|http:\/\/www\.|http:\/\/)([a-z0-9-]{1,20}\.)?([a-z0-9-]{2,64}\.[a-z0-9]{2,25})(\/.*)?/
+  
   if(urlRegex.test(url)) {
-    dns.lookup(url.replace(/(^\w+:|^)\/\//, ''), function (err) {
-      if(err) {
-        res.json({"error": "invalid URL"})
-      } else {
-        next()
-      }
-    })
+    next()
   } else {
     res.json({"error": "invalid URL"})
   }
