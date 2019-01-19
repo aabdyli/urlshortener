@@ -10,16 +10,20 @@ const app = express();
 const mongo = require('mongodb');
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.connect(process.env.MONGOLAB_URI,{ useNewUrlParser: true });
 
 const Schema = mongoose.Schema
 
 const UrlSchema = new mongoose.Schema({
-  original_url: {type: "string", required: true},
-  short_url: {type: "string"}
+  original_url: {type: String, required: true},
+  short_url: {type: String}
 });
 
-const UrlData = mongoose.model('Url', UrlSchema);
+const Url = mongoose.model('Url', UrlSchema);
+
+function urlCreate(req, res) {
+  Url.findById( 
+}
 
 // Basic Configuration 
 const port = process.env.PORT || 3000;
@@ -58,30 +62,21 @@ app.post('/api/shorturl/new', function (req, res, next) {
     res.json({"error": "invalid URL"})
   }
 }, function (req, res) {
-  UrlData.findOne({ original_url: req.body.url})
-    .exec(function (err, data) {
-      console.log(data);
-      if(err) {
-        const short_url = Math.random().toString(36).substring(7);
-        
-        const uri = new UrlData({
-          original_url: req.body.url, 
-          short_url: short_url
-        })
-        
-        uri.save()
-          .then(uri => {
-            console.log(uri);
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        
-        res.json("nth");
-      } else {
-        res.json("smth")
-      }
-    });
+     const short_url = Math.random().toString(36).substring(7);
+ 
+     const uri = new Url({
+       original_url: req.body.url, 
+       short_url: short_url
+     })
+ 
+     uri.save()
+       .then(uri => {
+         console.log(uri);
+       })
+       .catch(err => {
+         console.log(err);
+       });
+    res.json(uri)
 });
 
 app.get("/api/hello", function (req, res) {
