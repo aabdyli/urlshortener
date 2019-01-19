@@ -47,9 +47,10 @@ app.post('/api/shorturl/new', function (req, res, next) {
   const url = req.body.url
   const urlRegex = /(https:\/\/www\.|https:\/\/|http:\/\/www\.|http:\/\/)([a-z0-9]{1,20}\.)?([a-z0-9-]{2,64}\.[a-z0-9]{2,25})(\/.*)?/
   if(urlRegex.test(url)) {
-    dns.lookup(url, function (err) {
+    dns.lookup(url.replace(/(^\w+:|^)\/\//, ''), function (err) {
       if(err) {
-        console.log(err)
+        
+        res.json({"error": "invalid URL"})
       } else {
         next()
       }
@@ -59,32 +60,23 @@ app.post('/api/shorturl/new', function (req, res, next) {
   }
 }, function (req, res, next) {
   
-}
-         ,function (req, res) {
-  const short_url = Math.random().toString(36).substring(7);
-  const uri = new UrlData({original_url: req.body.url, short_url: short_url})
-  uri.save()
-    .then(uri => {
-      console.log(uri);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-  res.json(uri);
-  // var t = setTimeout(() => { next({message: 'timeout'}) }, timeout);
-  // createAndSaveURL((err, data) => {
-  //   clearTimeout(t);
-  //   if(err) { return (next(err)); }
-  //   if(!data) {
-  //     console.log('Missing `done()` argument');
-  //     return next({message: 'Missing callback argument'});
-  //   }
-  //    URLdata.findById(data._id, function(err, pers) {
-  //      if(err) { return (next(err)); }
-  //      res.json(pers);
-  //      pers.remove();
-  //    });
-  // })
+}, function (req, res) {
+  UrlData.findOne({ original_url: req.body.url}, function (err, data) {
+    if(err) {
+      const short_url = Math.random().toString(36).substring(7);
+      const uri = new UrlData({original_url: req.body.url, short_url: short_url})
+      uri.save()
+        .then(uri => {
+          console.log(uri);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      res.json(uri);
+    } else {
+      res.json(data)
+    }
+  });
 });
 
 app.get("/api/hello", function (req, res) {
