@@ -49,7 +49,6 @@ app.post('/api/shorturl/new', function (req, res, next) {
   if(urlRegex.test(url)) {
     dns.lookup(url.replace(/(^\w+:|^)\/\//, ''), function (err) {
       if(err) {
-        
         res.json({"error": "invalid URL"})
       } else {
         next()
@@ -58,25 +57,31 @@ app.post('/api/shorturl/new', function (req, res, next) {
   } else {
     res.json({"error": "invalid URL"})
   }
-}, function (req, res, next) {
-  
 }, function (req, res) {
-  UrlData.findOne({ original_url: req.body.url}, function (err, data) {
-    if(err) {
-      const short_url = Math.random().toString(36).substring(7);
-      const uri = new UrlData({original_url: req.body.url, short_url: short_url})
-      uri.save()
-        .then(uri => {
-          console.log(uri);
+  UrlData.findOne({ original_url: req.body.url})
+    .exec(function (err, data) {
+      console.log(data);
+      if(err) {
+        const short_url = Math.random().toString(36).substring(7);
+        
+        const uri = new UrlData({
+          original_url: req.body.url, 
+          short_url: short_url
         })
-        .catch(err => {
-          console.log(err);
-        });
-      res.json(uri);
-    } else {
-      res.json(data)
-    }
-  });
+        
+        uri.save()
+          .then(uri => {
+            console.log(uri);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        
+        res.json("nth");
+      } else {
+        res.json("smth")
+      }
+    });
 });
 
 app.get("/api/hello", function (req, res) {
