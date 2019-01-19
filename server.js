@@ -29,12 +29,13 @@ UrlSchema.pre('save', function(next) {
   const doc = this;
   
   if(doc.isNew) {
-    counter.findByIdAndUpdate({_id: 'entityId'}, 
+    counter.findOneAndUpdate({_id: doc._id}, 
                               {$inc: {seq: 1}}, 
                               {new: true, upsert: true},
-    }))
-  } else {
-    next()
+                              function (error, data) {
+      if(error) return next(error);
+      next(data);
+    })
   }
 });
 
