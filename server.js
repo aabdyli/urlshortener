@@ -14,29 +14,9 @@ mongoose.connect(process.env.MONGOLAB_URI);
 
 const Schema = mongoose.Schema
 
-const CounterSchema = new Schema({
-  seq: { type: Number, default: 0}
-});
-
 const UrlSchema = new mongoose.Schema({
   original_url: {type: "string", required: true},
-  short_url: {type: Number, default: 0}
-});
-
-const counter = mongoose.model('Counter', CounterSchema);
-
-UrlSchema.pre('save', function(next) {
-  const doc = this;
-  
-  if(doc.isNew) {
-    counter.findOneAndUpdate({_id: doc._id}, 
-                              {$inc: {seq: 1}}, 
-                              {new: true, upsert: true},
-                              function (error, data) {
-      if(error) return next(error);
-      next(data);
-    })
-  }
+  short_url: {type: "string"}
 });
 
 const UrlData = mongoose.model('Url', UrlSchema);
@@ -67,12 +47,22 @@ app.post('/api/shorturl/new', function (req, res, next) {
   const url = req.body.url
   const urlRegex = /(https:\/\/www\.|https:\/\/|http:\/\/www\.|http:\/\/)([a-z0-9]{1,20}\.)?([a-z0-9-]{2,64}\.[a-z0-9]{2,25})(\/.*)?/
   if(urlRegex.test(url)) {
-    next()
+    dns.lookup(url, function (err) {
+      if(err) {
+        console.log(err)
+      } else {
+        next()
+      }
+    })
   } else {
     res.json({"error": "invalid URL"})
   }
 }, function (req, res, next) {
-  const uri = new UrlData({original_url: req.body.url})
+  
+}
+         ,function (req, res) {
+  const short_url = Math.random().toString(36).substring(7);
+  const uri = new UrlData({original_url: req.body.url, short_url: short_url})
   uri.save()
     .then(uri => {
       console.log(uri);
