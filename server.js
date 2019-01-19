@@ -12,7 +12,9 @@ const mongoose = require('mongoose');
 
 mongoose.connect(process.env.MONGOLAB_URI);
 
-const CounterSchema = new mongoose.Schema({
+const Schema = mongoose.Schema
+
+const CounterSchema = new Schema({
   seq: { type: Number, default: 0}
 });
 
@@ -21,7 +23,7 @@ const UrlSchema = new mongoose.Schema({
   short_url: {type: Number, default: 0}
 });
 
-const counter = mongoose.model('counter', CounterSchema);
+const counter = mongoose.model('Counter', CounterSchema);
 
 UrlSchema.pre('save', function(next) {
   const doc = this;
@@ -42,7 +44,7 @@ UrlSchema.pre('save', function(next) {
   }
 });
 
-const UrlData = mongoose.model('url', UrlSchema);
+const UrlData = mongoose.model('Url', UrlSchema);
 
 // Basic Configuration 
 const port = process.env.PORT || 3000;
@@ -108,3 +110,4 @@ app.get("/api/hello", function (req, res) {
 app.listen(port, function () {
   console.log('Node.js listening ...');
 });
+Hello Bas
