@@ -31,13 +31,7 @@ UrlSchema.pre('save', function(next) {
   if(doc.isNew) {
     counter.findByIdAndUpdate({_id: 'entityId'}, 
                               {$inc: {seq: 1}}, 
-                              {new: true, upsert: true}
-    .then(function(count){
-      doc.short_url = count.seq;
-      next()
-    })
-    .catch(function(error) {
-      next(error);
+                              {new: true, upsert: true},
     }))
   } else {
     next()
@@ -80,10 +74,10 @@ app.post('/api/shorturl/new', function (req, res, next) {
   const uri = new UrlData({original_url: req.body.url})
   uri.save()
     .then(uri => {
-      res.json(uri);
+      console.log(uri);
     })
     .catch(err => {
-      res.json(err);
+      console.log(err);
     });
   res.json(uri);
   // var t = setTimeout(() => { next({message: 'timeout'}) }, timeout);
